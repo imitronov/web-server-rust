@@ -1,0 +1,52 @@
+name: Workspace
+
+on:
+  pull_request:
+    paths-ignore:
+      - 'README.md'
+  push:
+    branches: master
+    paths-ignore:
+      - '**/README.md'
+
+env:
+  CARGO_INCREMENTAL: 0
+  RUSTFLAGS: "-Dwarnings"
+  RUSTDOCFLAGS: "-Dwarnings"
+
+jobs:
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: RustCrypto/actions/cargo-cache@master
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.87.0
+          components: clippy
+      - run: cargo clippy --all --all-features --tests -- -D warnings
+
+  doc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+      - run: cargo doc --workspace --all-features --no-deps
+
+  rustfmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+          components: rustfmt
+      - run: cargo fmt --all -- --check
+
+  typos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: crate-ci/typos@v1.39.2
