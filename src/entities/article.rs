@@ -1,7 +1,7 @@
 use serde::Serialize;
 
 #[derive(Serialize)]
-pub struct ArticleResource {
-    pub id: String,
+pub struct Article {
+    pub id: i32,
     pub name: String,
 }
