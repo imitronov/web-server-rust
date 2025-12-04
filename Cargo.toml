@@ -12,3 +12,8 @@ diesel = { version = "2.2.0", features = ["postgres"] }
 # pq-sys = { version = "0.6", features = ["bundled"] }
 # openssl-sys = { version = "0.9.100", features = ["vendored"] }
 dotenvy = "0.15"
+argon2 = "0.5.3"
+rand = { version = "0.8", features = ["std_rng"] }
+jwt = "0.16.0"
+hmac = "0.12.1"
+sha2 = "0.10.9"
