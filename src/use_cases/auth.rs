@@ -1,12 +1,14 @@
+use crate::components::db::nextval;
 use crate::components::token;
-use crate::db::{establish_connection, nextval};
 use crate::entities::user::User;
 use crate::schema::users;
-use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl, SelectableHelper};
+use diesel::{ExpressionMethods, PgConnection, QueryDsl, RunQueryDsl, SelectableHelper};
 
-pub fn registration(email: String, password: String) -> Result<bool, String> {
-    let connection = &mut establish_connection();
-
+pub fn registration(
+    connection: &mut PgConnection,
+    email: String,
+    password: String,
+) -> Result<bool, String> {
     let user = users::table
         .filter(users::dsl::email.eq(email.to_lowercase()))
         .select(User::as_select())
@@ -27,8 +29,11 @@ pub fn registration(email: String, password: String) -> Result<bool, String> {
     Ok(true)
 }
 
-pub fn login(email: String, password: String) -> Result<String, String> {
-    let connection = &mut establish_connection();
+pub fn login(
+    connection: &mut PgConnection,
+    email: String,
+    password: String,
+) -> Result<String, String> {
     let user = users::table
         .filter(users::dsl::email.eq(email.to_lowercase()))
         .select(User::as_select())
@@ -42,8 +47,7 @@ pub fn login(email: String, password: String) -> Result<String, String> {
     Err("Invalid credentials.".to_string())
 }
 
-pub fn whoami(token: String) -> Result<User, String> {
-    let connection = &mut establish_connection();
+pub fn whoami(connection: &mut PgConnection, token: String) -> Result<User, String> {
     let token_data = token::verify(token);
     let sub = token_data.get("sub");
 
