@@ -1,3 +1,4 @@
+use crate::ErrorResponse;
 use crate::components::token;
 use actix_web::dev::forward_ready;
 use actix_web::error::InternalError;
@@ -6,12 +7,6 @@ use actix_web::{
     dev::{Service, ServiceRequest, ServiceResponse, Transform},
 };
 use futures_util::future::{LocalBoxFuture, Ready, ready};
-use serde::Serialize;
-
-#[derive(Serialize)]
-struct ErrorResponse<'a> {
-    message: &'a str,
-}
 
 fn unauthorized_error(message: &str) -> Error {
     InternalError::from_response(
