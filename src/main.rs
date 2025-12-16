@@ -1,7 +1,9 @@
 use actix_web::{App, HttpServer, web};
 
 mod controllers;
+mod db;
 mod entities;
+mod schema;
 mod use_cases;
 
 use crate::controllers::articles;
